@@ -2,186 +2,182 @@
 <html lang="fr">
 
 <head>
-    <meta charset="utf-8" />
-    <title>gestion de presence</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bootstrap.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <style>
-        .card {
-            margin-bottom: 1rem;
+        #map-tab {
+            height: 70vh;
         }
 
-        .card-text {
-            font-size: 1rem;
-        }
-
-        /* Ajustements pour les petits écrans */
-        @media (max-width: 768px) {
-            .card-title {
-                font-size: 1.2rem;
-            }
-
-            .card-text {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .card-title {
-                font-size: 1rem;
-            }
-
-            .card-text {
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Style pour désactiver les cartes non accessibles */
-        .disabled-card {
-            pointer-events: none;
-            opacity: 0.5;
+        .pokemon-list {
+            max-height: 70vh;
+            overflow-y: auto;
         }
     </style>
 </head>
 
-<body style="height: 100vh;">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><img class="col-md-8" src="Geneve-Chenois-Volleyball-logo.png"
-                    alt=""></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav">
-                    <a class="nav-link active fs-3" aria-current="page" href="index.html"
-                        style="color:#00466d;">Accueil</a>
-                    <a class="nav-link active fs-3" aria-current="page" href="stat.html"
-                        style="color:#00466d;">stat</a>
-                    <a class="nav-link active fs-3" aria-current="page" href="login.html"
-                        style="color:#00466d;">Logout</a>
-                </div>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Pokémon Tracker</h1>
+        <ul class="nav nav-tabs mt-4">
+            <li class="nav-item">
+                <a class="nav-link active" href="#list-tab" data-bs-toggle="tab">Liste</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#map-tab" data-bs-toggle="tab" onclick="initMap()">Carte</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="d-flex justify-content-end my-3">
+                <button class="btn btn-success" onclick="addRandomPokemon()">Ajouter une apparition aléatoire</button>
             </div>
-        </div>
-    </nav>
 
-    <div class="container my-4">
-        <div class="row">
-            <section class="col-md-12">
+            <div class="tab-pane fade show active" id="list-tab">
+                <div class="pokemon-list mt-3" id="pokemon-list"></div>
+            </div>
 
-                <table class="table text-center">
-                    <thead>
-                        <tr>
-                            <th>Équipe</th>
-                            <th>Entraînements</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="team-row">
-                            <td class="align-middle"><strong>m2</strong></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="./pages/presence.php?idteam=1" class="disabled-card"
-                                            style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">mardi</h5>
-                                                    <p class="card-text">20:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="./pages/presence.php?idteam=1" class="disabled-card"
-                                            style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">jeudi</h5>
-                                                    <p class="card-text">20:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="./pages/presence.php?idteam=1" class="disabled-card"
-                                            style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">vendredi</h5>
-                                                    <p class="card-text">20:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="./pages/presence.php?idteam=1" class="disabled-card"
-                                            style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">samedi</h5>
-                                                    <p class="card-text">20:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="team-row">
-                            <td class="align-middle"><strong>l2</strong></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="presence.html" class="" style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">mercredi</h5>
-                                                    <p class="card-text">18:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="./pages/presence.php?idteam=2" class="disabled-card"
-                                            style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">mardi</h5>
-                                                    <p class="card-text">18:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="col-6 col-md-3 mb-3"> <!-- Change to col-6 for better responsiveness -->
-                                        <a href="./pages/presence.php?idteam=2" class="disabled-card"
-                                            style="text-decoration:none;">
-                                            <div class="card text-center bg-light">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">dimanche</h5>
-                                                    <p class="card-text">20:00:00</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </section>
+            <div class="tab-pane fade" id="map-tab"></div>
         </div>
     </div>
 
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const apiUrl = "https://tyradex.app/api/v1/pokemon";
+        let map;
 
-        </div>
-    </footer>
+       
+        function initMap() {
+            if (!map) {
+                map = L.map('map-tab').setView([46.2044, 6.1432], 14);
 
-    <script src="bootstrap.min.js"></script>
+                L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                    maxZoom: 20,
+                    attribution: 'Map data © OpenStreetMap contributors'
+                }).addTo(map);
+
+                
+                loadStoredAppearances();
+            }
+        }
+
+        
+        function loadStoredAppearances() {
+            const storedData = JSON.parse(localStorage.getItem("pokemonAppearances")) || [];
+            storedData.forEach(entry => {
+                L.marker(entry.location)
+                    .addTo(map)
+                    .bindPopup(`
+                        <b>${entry.name}</b><br>
+                        <img src="${entry.sprite}" alt="${entry.name}" style="width: 50px; height: auto;">
+                    `);
+            });
+        }
+
+
+        async function addRandomPokemon() {
+            const randomId = Math.floor(Math.random() * 1027);
+            try {
+                const response = await fetch(`${apiUrl}/${randomId}`);
+                if (!response.ok) throw new Error("Erreur lors de la récupération du Pokémon.");
+                const pokemon = await response.json();
+
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+
+                       
+                        const randomOffset = getRandomOffset(500);
+                        const randomLatitude = latitude + randomOffset.lat;
+                        const randomLongitude = longitude + randomOffset.lng;
+
+                    
+                        const appearance = {
+                            name: pokemon.name.fr,
+                            sprite: pokemon.sprites?.regular,
+                            location: [randomLatitude, randomLongitude],
+                        };
+
+                     
+                        const storedData = JSON.parse(localStorage.getItem("pokemonAppearances")) || [];
+                        storedData.push(appearance);
+                        localStorage.setItem("pokemonAppearances", JSON.stringify(storedData));
+
+                        if (map) {
+                            L.marker(appearance.location)
+                                .addTo(map)
+                                .bindPopup(`
+                                    <b>${appearance.name}</b><br>
+                                    <img src="${appearance.sprite}" alt="${appearance.name}" style="width: 50px; height: auto;">
+                                `)
+                                .openPopup();
+
+                            map.setView(appearance.location, 14);
+                        }
+
+                        alert(`Une apparition de ${appearance.name} a été ajoutée à la position générée !`);
+                    },
+                    error => {
+                        console.error("Erreur lors de la récupération de la position :", error);
+                        alert("Impossible d'obtenir votre position.");
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("Erreur lors de l'ajout d'un Pokémon aléatoire.");
+            }
+        }
+
+       
+        function getRandomOffset(radiusInMeters) {
+            const earthRadius = 6378137;
+
+            const distance = Math.random() * radiusInMeters;
+            const angle = Math.random() * 2 * Math.PI;
+
+            const offsetLat = distance * Math.cos(angle) / earthRadius;
+            const offsetLng = distance * Math.sin(angle) / (earthRadius * Math.cos((Math.PI * offsetLat) / 180));
+
+            return {
+                lat: offsetLat * (180 / Math.PI),
+                lng: offsetLng * (180 / Math.PI),
+            };
+        }
+        async function fetchPokemon() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Erreur lors du fetch");
+                const data = await response.json();
+                displayPokemonList(data);
+            } catch (error) {
+                console.error(error);
+                document.getElementById("pokemon-list").innerHTML = "<p class='text-danger'>Impossible de charger les Pokémon.</p>";
+            }
+        }
+
+        function displayPokemonList(pokemonData) {
+            const listContainer = document.getElementById("pokemon-list");
+            listContainer.innerHTML = "";
+            pokemonData.forEach(pokemon => {
+                if (pokemon.name.fr !== "MissingNo.") {
+                    const listItem = document.createElement("div");
+                    listItem.className = "d-flex justify-content-between align-items-center p-2 border-bottom";
+                    listItem.innerHTML = `
+                        <span>${pokemon.name.fr}</span>
+                        <img src="${pokemon.sprites.regular}" width="50px" height="50px">
+                       
+                    `;
+                    listContainer.appendChild(listItem);
+                    // <button class="btn btn-sm btn-primary" onclick="addPokemonAppearance('${pokemon.name.fr}')">Ajouter</button>
+                }
+            });
+        }
+
+        fetchPokemon();
+    </script>
 </body>
 
 </html>
