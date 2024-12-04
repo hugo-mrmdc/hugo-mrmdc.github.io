@@ -5,8 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Tracker</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007bff">
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
     <style>
         #map-tab {
             height: 70vh;
@@ -43,28 +52,37 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js")
+                .then(() => console.log("Service Worker registered successfully"))
+                .catch(error => console.error("Service Worker registration failed:", error));
+        }
+    </script>
+
     <script>
         const apiUrl = "https://tyradex.app/api/v1/pokemon";
         let map;
 
-       
         function initMap() {
             if (!map) {
                 map = L.map('map-tab').setView([46.2044, 6.1432], 14);
-
                 L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
                     maxZoom: 20,
                     attribution: 'Map data © OpenStreetMap contributors'
                 }).addTo(map);
 
-                
                 loadStoredAppearances();
             }
         }
 
-        
         function loadStoredAppearances() {
             const storedData = JSON.parse(localStorage.getItem("pokemonAppearances")) || [];
             storedData.forEach(entry => {
@@ -77,7 +95,6 @@
             });
         }
 
-
         async function addRandomPokemon() {
             const randomId = Math.floor(Math.random() * 1027);
             try {
@@ -88,20 +105,16 @@
                 navigator.geolocation.getCurrentPosition(
                     position => {
                         const { latitude, longitude } = position.coords;
-
-                       
                         const randomOffset = getRandomOffset(500);
                         const randomLatitude = latitude + randomOffset.lat;
                         const randomLongitude = longitude + randomOffset.lng;
 
-                    
                         const appearance = {
                             name: pokemon.name.fr,
                             sprite: pokemon.sprites?.regular,
                             location: [randomLatitude, randomLongitude],
                         };
 
-                     
                         const storedData = JSON.parse(localStorage.getItem("pokemonAppearances")) || [];
                         storedData.push(appearance);
                         localStorage.setItem("pokemonAppearances", JSON.stringify(storedData));
@@ -131,21 +144,18 @@
             }
         }
 
-       
         function getRandomOffset(radiusInMeters) {
             const earthRadius = 6378137;
-
             const distance = Math.random() * radiusInMeters;
             const angle = Math.random() * 2 * Math.PI;
-
             const offsetLat = distance * Math.cos(angle) / earthRadius;
             const offsetLng = distance * Math.sin(angle) / (earthRadius * Math.cos((Math.PI * offsetLat) / 180));
-
             return {
                 lat: offsetLat * (180 / Math.PI),
                 lng: offsetLng * (180 / Math.PI),
             };
         }
+
         async function fetchPokemon() {
             try {
                 const response = await fetch(apiUrl);
@@ -168,10 +178,8 @@
                     listItem.innerHTML = `
                         <span>${pokemon.name.fr}</span>
                         <img src="${pokemon.sprites.regular}" width="50px" height="50px">
-                       
                     `;
                     listContainer.appendChild(listItem);
-                    // <button class="btn btn-sm btn-primary" onclick="addPokemonAppearance('${pokemon.name.fr}')">Ajouter</button>
                 }
             });
         }
